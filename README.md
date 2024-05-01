@@ -1,8 +1,8 @@
-# Getting Started with Create React App
+# Frontend for PortfolioCraft project
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+The backend for this project is here - https://github.com/Neha-Bhatia551/portfolio_craft_backend
 
-## Available Scripts
+PortfolioCraft is a web-based platform aimed at empowering with a powerful tool to effectively display their skills, accomplishments, and expertise, thereby enhancing their competitiveness in the job market.
 
 In the project directory, you can run:
 
