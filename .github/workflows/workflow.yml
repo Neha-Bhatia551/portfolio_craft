@@ -26,7 +26,7 @@ jobs:
     steps:
       - uses: actions/checkout@v1
       - name: Deploy to S3
-        uses: jakejarvis/s3-sync-action@master
+        uses: Neha-Bhatia551/ portfolio_craft@master
         with:
           args: --acl public-read --follow-symlinks --delete
         env:
