@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import Modal from "./Modal";
+import Modal from "./Modal.js";
 import { FaLinkedin, FaEnvelope, FaPhone } from "react-icons/fa";
 import { useReactToPrint } from "react-to-print";
 import axios from "axios";

@@ -1,13 +1,13 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import LoginForm from "./LoginForm";
-import Home from "./Home";
-import Home2 from "./Home2";
+import LoginForm from "./LoginForm.js";
+import Home from "./Home.js";
+import Home2 from "./Home2.js";
 import "./App.css";
 import backgroundImage from "./images/Portfolio.jpeg";
-import Design1 from "./Design1";
-import Design2 from "./Design2";
-import Design3 from "./Design3";
+import Design1 from "./Design1.js";
+import Design2 from "./Design2.js";
+import Design3 from "./Design3.js";
 
 
 function App() {
