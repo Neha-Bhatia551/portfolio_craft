@@ -16,16 +16,24 @@ const Modal = ({ showModal, setShowModal, handleSubmit }) => {
   });
 
   const [errors, setErrors] = useState({});
+  const [hasLinkedIn, setHasLinkedIn] = useState(null); // Tracks LinkedIn profile presence
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleRadioChange = (e) => {
+    setHasLinkedIn(e.target.value === "yes");
+    if (e.target.value === "no") {
+      setFormData({ ...formData, linkedIn: "" }); // Clear LinkedIn field if "no" is selected
+    }
   };
 
   const validateForm = () => {
     let errors = {};
     let formIsValid = true;
 
-    // Email validation
+    // Validation logic for various fields
     if (!formData.email) {
       formIsValid = false;
       errors["email"] = "Cannot be empty";
@@ -34,7 +42,6 @@ const Modal = ({ showModal, setShowModal, handleSubmit }) => {
       errors["email"] = "Email is not valid";
     }
 
-    // Phone Number validation
     if (!formData.phoneNumber) {
       formIsValid = false;
       errors["phoneNumber"] = "Cannot be empty";
@@ -43,16 +50,14 @@ const Modal = ({ showModal, setShowModal, handleSubmit }) => {
       errors["phoneNumber"] = "Phone number is not valid. Should be 10 digits";
     }
 
-    // LinkedIn URL validation
     if (
-      formData.linkedIn &&
+      hasLinkedIn &&
       !/^https?:\/\/(www\.)?linkedin\.com\/.+$/.test(formData.linkedIn)
     ) {
       formIsValid = false;
       errors["linkedIn"] = "Invalid LinkedIn URL";
     }
 
-    // Name field validation as required
     if (!formData.name.trim()) {
       formIsValid = false;
       errors["name"] = "Name is required";
@@ -65,13 +70,7 @@ const Modal = ({ showModal, setShowModal, handleSubmit }) => {
   const handleFormSubmit = (e) => {
     e.preventDefault();
     if (validateForm()) {
-      // Ensure role and university are converted to uppercase before submitting
-      const updatedFormData = {
-        ...formData,
-        role: formData.role.toUpperCase(),
-        university: formData.university.toUpperCase(),
-      };
-      handleSubmit(updatedFormData); // Pass the updated form data to the handleSubmit function
+      handleSubmit(formData);
       setShowModal(false);
     }
   };
@@ -100,36 +99,89 @@ const Modal = ({ showModal, setShowModal, handleSubmit }) => {
           width: "100%",
         }}
       >
-        <h2>Create Your Portfolio</h2>
+        <h2 style={{ color: "#228B22" }}>Create Your Portfolio</h2>
         <form onSubmit={handleFormSubmit}>
-          {Object.keys(formData).map((key) => (
-            <div key={key}>
-              <input
-                type={
-                  key === "email"
-                    ? "email"
-                    : key === "phoneNumber"
-                    ? "tel"
-                    : key === "linkedIn"
-                    ? "url"
-                    : "text"
-                }
-                name={key}
-                placeholder={
-                  key[0].toUpperCase() +
-                  key
-                    .slice(1)
-                    .replace(/([A-Z])/g, " $1")
-                    .trim()
-                }
-                value={formData[key]}
-                onChange={handleChange}
-                required={key !== "linkedIn"} // LinkedIn is not required
-                style={{ width: "98%", padding: "10px", margin: "5px 0" }}
-              />
-              {errors[key] && <div style={{ color: "red" }}>{errors[key]}</div>}
-            </div>
-          ))}
+          {Object.keys(formData).map((key) => {
+            // Render the LinkedIn question right after the phone number field
+            if (key === "phoneNumber") {
+              return (
+                <>
+                  <div key={key}>
+                    <input
+                      type="tel"
+                      name={key}
+                      placeholder="Phone Number"
+                      value={formData[key]}
+                      onChange={handleChange}
+                      required
+                      style={{ width: "98%", padding: "10px", margin: "5px 0" }}
+                    />
+                    {errors[key] && (
+                      <div style={{ color: "red" }}>{errors[key]}</div>
+                    )}
+                  </div>
+                  <div>
+                    <label style={{ marginRight: "10px", color: "black" }}>
+                      Do you have a LinkedIn profile?
+                    </label>
+                    <label style={{ color: "black" }}>
+                      <input
+                        type="radio"
+                        name="hasLinkedIn"
+                        value="yes"
+                        checked={hasLinkedIn === true}
+                        onChange={handleRadioChange}
+                      />{" "}
+                      Yes
+                    </label>
+                    <label style={{ marginLeft: "10px", color: "black" }}>
+                      <input
+                        type="radio"
+                        name="hasLinkedIn"
+                        value="no"
+                        checked={hasLinkedIn === false}
+                        onChange={handleRadioChange}
+                      />{" "}
+                      No
+                    </label>
+                  </div>
+                </>
+              );
+            }
+            if (key !== "linkedIn" || hasLinkedIn) {
+              return (
+                <div key={key}>
+                  <input
+                    type={
+                      key === "email"
+                        ? "email"
+                        : key === "phoneNumber"
+                        ? "tel"
+                        : key === "linkedIn"
+                        ? "url"
+                        : "text"
+                    }
+                    name={key}
+                    placeholder={
+                      key[0].toUpperCase() +
+                      key
+                        .slice(1)
+                        .replace(/([A-Z])/g, " $1")
+                        .trim()
+                    }
+                    value={formData[key]}
+                    onChange={handleChange}
+                    required={key !== "linkedIn"}
+                    style={{ width: "98%", padding: "10px", margin: "5px 0" }}
+                  />
+                  {errors[key] && (
+                    <div style={{ color: "red" }}>{errors[key]}</div>
+                  )}
+                </div>
+              );
+            }
+            return null;
+          })}
           <button
             type="submit"
             style={{

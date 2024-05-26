@@ -8,7 +8,7 @@ import backgroundImage from "./images/Portfolio.jpeg";
 import Design1 from "./Design1";
 import Design2 from "./Design2";
 import Design3 from "./Design3";
-import PortfolioPage from "./PortfolioPage";
+
 
 function App() {
   return (
@@ -32,7 +32,7 @@ function App() {
           <Route path="/design1" element={<Design1 />} />
           <Route path="/design2" element={<Design2 />} />
           <Route path="/design3" element={<Design3 />} />
-          <Route path="/portfolio" element={<PortfolioPage />} />
+        
         </Routes>
       </div>
     </Router>

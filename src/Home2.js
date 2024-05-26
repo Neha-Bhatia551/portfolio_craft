@@ -1,18 +1,15 @@
-import React, { useState } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
-import Modal from "./Modal"; // Ensure the Modal component is imported
 
 const Home2 = () => {
   const navigate = useNavigate();
-  const [showModal, setShowModal] = useState(false);
 
   const logout = () => {
     navigate("/login");
   };
 
-  const handleSubmit = (data) => {
-    navigate("/portfolio", { state: { ...data } });
-    setShowModal(false);
+  const navigateToDesign = (path) => {
+    navigate(path);
   };
 
   return (
@@ -60,31 +57,48 @@ const Home2 = () => {
           style={{
             fontSize: "32px",
             marginBottom: "20px",
-            color: "white", // Make text color white
-            animation: "fadeIn 1.5s ease-out", // Apply fade-in animation
+            color: "white",
+            animation: "fadeIn 1.5s ease-out",
           }}
         >
           Welcome to Portfolio Craft 2.0
         </h1>
-        <button
-          onClick={() => setShowModal(true)}
-          style={{
-            padding: "10px 20px",
-            fontSize: "18px",
-            cursor: "pointer",
-            background: "green",
-            color: "white",
-            border: "none",
-            borderRadius: "5px",
-          }}
-        >
-          Create Portfolio
-        </button>
-        <Modal
-          showModal={showModal}
-          setShowModal={setShowModal}
-          handleSubmit={handleSubmit}
-        />
+        {/* Image placeholders for designs */}
+        <div style={{ display: "flex", marginTop: "20px" }}>
+          <img
+            src="path/to/design1-placeholder.jpg"
+            alt="Design 1"
+            style={{
+              width: "300px",
+              height: "300px",
+              margin: "10px",
+              cursor: "pointer",
+            }}
+            onClick={() => navigateToDesign("/design1")}
+          />
+          <img
+            src="path/to/design2-placeholder.jpg"
+            alt="Design 2"
+            style={{
+              width: "300px",
+              height: "300px",
+              margin: "10px",
+              cursor: "pointer",
+            }}
+            onClick={() => navigateToDesign("/design2")}
+          />
+          <img
+            src="path/to/design3-placeholder.jpg"
+            alt="Design 3"
+            style={{
+              width: "300px",
+              height: "300px",
+              margin: "10px",
+              cursor: "pointer",
+            }}
+            onClick={() => navigateToDesign("/design3")}
+          />
+        </div>
       </div>
     </>
   );
