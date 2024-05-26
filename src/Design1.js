@@ -15,7 +15,7 @@ const Design1 = () => {
   const handleSubmit = async (formData) => {
     try {
       const response = await axios.post(
-        "http://localhost:8080/api/userinfo",
+        "http://ec2-54-91-220-211.compute-1.amazonaws.com:8080/api/userinfo/template/1",
         formData
       );
       setPortfolioData(response.data);
@@ -27,7 +27,7 @@ const Design1 = () => {
 
   const fetchUserInfo = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/api/userinfo");
+      const response = await axios.get("http://ec2-54-91-220-211.compute-1.amazonaws.com:8080/api/userinfo/template/1");
       setPortfolioData(response.data[0]); // Assuming you only need the first entry for now
     } catch (error) {
       console.error("There was an error fetching the data!", error);
