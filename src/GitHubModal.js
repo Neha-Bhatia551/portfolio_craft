@@ -14,7 +14,7 @@ const GitHubModal = ({ showModal, setShowModal, handleGitHubUpload }) => {
     showModal && (
       <div style={modalStyle}>
         <div style={modalContentStyle}>
-          <h2 style={headerStyle}>Enter your GitHub Details</h2>
+          <h2>Enter your GitHub Details</h2>
           <label style={labelStyle}>
             GitHub Token:
             <input
@@ -64,35 +64,31 @@ const modalStyle = {
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
-  zIndex: 1000,
 };
 
 const modalContentStyle = {
   backgroundColor: "#fff",
   padding: "20px",
   borderRadius: "5px",
-  width: "400px",
+  width: "300px",
   display: "flex",
   flexDirection: "column",
-  boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
-};
-
-const headerStyle = {
-  marginBottom: "20px",
-  color: "#000",
+  color: "black", // Set text color to black
+  boxSizing: "border-box",
 };
 
 const labelStyle = {
-  color: "#000",
+  display: "flex",
+  flexDirection: "column",
   marginBottom: "10px",
 };
 
 const inputStyle = {
   width: "100%",
   padding: "10px",
-  margin: "10px 0",
   borderRadius: "5px",
   border: "1px solid #ccc",
+  boxSizing: "border-box",
 };
 
 const buttonStyle = {
@@ -103,6 +99,7 @@ const buttonStyle = {
   borderRadius: "5px",
   cursor: "pointer",
   margin: "10px 0",
+  width: "100%",
 };
 
 export default GitHubModal;
