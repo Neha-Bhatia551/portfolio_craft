@@ -1,18 +1,18 @@
-import React, { useState } from "react";
+import React from "react";
 import { useNavigate } from "react-router-dom";
-import Modal from "./Modal"; // Ensure the Modal component is imported
+import template1 from "./images/TEMPLATE 1.png";
+import template2 from "./images/TEMPLATE 2.png";
+import template3 from "./images/TEMPLATE 3.png";
 
 const Home2 = () => {
   const navigate = useNavigate();
-  const [showModal, setShowModal] = useState(false);
 
   const logout = () => {
     navigate("/login");
   };
 
-  const handleSubmit = (data) => {
-    navigate("/portfolio", { state: { ...data } });
-    setShowModal(false);
+  const navigateToDesign = (path) => {
+    navigate(path);
   };
 
   return (
@@ -60,31 +60,48 @@ const Home2 = () => {
           style={{
             fontSize: "32px",
             marginBottom: "20px",
-            color: "white", // Make text color white
-            animation: "fadeIn 1.5s ease-out", // Apply fade-in animation
+            color: "white",
+            animation: "fadeIn 1.5s ease-out",
           }}
         >
           Welcome to Portfolio Craft 2.0
         </h1>
-        <button
-          onClick={() => setShowModal(true)}
-          style={{
-            padding: "10px 20px",
-            fontSize: "18px",
-            cursor: "pointer",
-            background: "green",
-            color: "white",
-            border: "none",
-            borderRadius: "5px",
-          }}
-        >
-          Create Portfolio
-        </button>
-        <Modal
-          showModal={showModal}
-          setShowModal={setShowModal}
-          handleSubmit={handleSubmit}
-        />
+        {/* Image placeholders for designs */}
+        <div style={{ display: "flex", marginTop: "20px" }}>
+          <img
+            src={template1}
+            alt="Design 1"
+            style={{
+              width: "300px",
+              height: "300px",
+              margin: "10px",
+              cursor: "pointer",
+            }}
+            onClick={() => navigateToDesign("/design1")}
+          />
+          <img
+            src={template2}
+            alt="Design 2"
+            style={{
+              width: "300px",
+              height: "300px",
+              margin: "10px",
+              cursor: "pointer",
+            }}
+            onClick={() => navigateToDesign("/design2")}
+          />
+          <img
+            src={template3}
+            alt="Design 3"
+            style={{
+              width: "300px",
+              height: "300px",
+              margin: "10px",
+              cursor: "pointer",
+            }}
+            onClick={() => navigateToDesign("/design3")}
+          />
+        </div>
       </div>
     </>
   );
