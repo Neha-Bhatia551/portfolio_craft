@@ -1,5 +1,8 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import template1 from "./images/TEMPLATE 1.png";
+import template2 from "./images/TEMPLATE 2.png";
+import template3 from "./images/TEMPLATE 3.png";
 
 const Home2 = () => {
   const navigate = useNavigate();
@@ -66,7 +69,7 @@ const Home2 = () => {
         {/* Image placeholders for designs */}
         <div style={{ display: "flex", marginTop: "20px" }}>
           <img
-            src="path/to/design1-placeholder.jpg"
+            src={template1}
             alt="Design 1"
             style={{
               width: "300px",
@@ -77,7 +80,7 @@ const Home2 = () => {
             onClick={() => navigateToDesign("/design1")}
           />
           <img
-            src="path/to/design2-placeholder.jpg"
+            src={template2}
             alt="Design 2"
             style={{
               width: "300px",
@@ -88,7 +91,7 @@ const Home2 = () => {
             onClick={() => navigateToDesign("/design2")}
           />
           <img
-            src="path/to/design3-placeholder.jpg"
+            src={template3}
             alt="Design 3"
             style={{
               width: "300px",
