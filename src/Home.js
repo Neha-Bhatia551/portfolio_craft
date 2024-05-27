@@ -52,7 +52,9 @@ const Home = () => {
         <p style={{ fontSize: "50px", color: "white" }}>
           WELCOME TO PORTFOLIO CRAFT
         </p>
-        <p>Explore innovative designs and creative artworks!</p>
+        <p style={{ fontSize: "25px", color: "white" }}>
+          Explore innovative designs and creative artworks!
+        </p>
       </div>
     </div>
   );
