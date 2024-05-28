@@ -18,7 +18,7 @@ const GitHubModal = ({ showModal, setShowModal, handleGitHubUpload }) => {
           <label style={labelStyle}>
             GitHub Token:
             <input
-              type="text"
+              type="password"
               value={token}
               onChange={(e) => setToken(e.target.value)}
               style={inputStyle}

@@ -50,9 +50,6 @@ const Design1 = () => {
   });
 
   const generateStaticHtml = (portfolioData) => {
-    const projects = Array.isArray(portfolioData.projects)
-      ? portfolioData.projects
-      : [];
     return `
       <!DOCTYPE html>
       <html lang="en">
@@ -168,19 +165,8 @@ const Design1 = () => {
           <p>Education: ${portfolioData.education || ""}</p>
           <p>Experience: ${portfolioData.experience || ""}</p>
           <p>Tech Stack: ${portfolioData.techStack || ""}</p>
-          <h2>Projects</h2>
-          <ul>
-            ${projects
-              .map(
-                (project) => `
-              <li>
-                <h3>${project.title}</h3>
-                <p>${project.description}</p>
-              </li>
-            `
-              )
-              .join("")}
-          </ul>
+          
+          <p>Projects:${portfolioData.projects || ""}</p>
         </div>
       </body>
       </html>
@@ -337,17 +323,7 @@ const Design1 = () => {
           <p>
             Tech Stack: {portfolioData ? portfolioData.techStack : "Tech Stack"}
           </p>
-          <h2>Projects</h2>
-          <ul>
-            {portfolioData && Array.isArray(portfolioData.projects)
-              ? portfolioData.projects.map((project) => (
-                  <li key={project.title}>
-                    <h3>{project.title}</h3>
-                    <p>{project.description}</p>
-                  </li>
-                ))
-              : "Projects"}
-          </ul>
+          <p>Projects:{portfolioData ? portfolioData.projects : "Projects"}</p>
         </div>
         {modalOpen && (
           <Modal

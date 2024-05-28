@@ -1,11 +1,13 @@
 import React, { useState, useRef, useEffect } from "react";
 import Modal from "./Modal.js";
+import GitHubModal from "./GitHubModal.js"; // Import the new GitHubModal component
 import { FaLinkedin, FaEnvelope, FaPhone } from "react-icons/fa";
 import { useReactToPrint } from "react-to-print";
 import axios from "axios";
 
 const Design2 = () => {
   const [modalOpen, setModalOpen] = useState(false);
+  const [gitHubModalOpen, setGitHubModalOpen] = useState(false);
   const [portfolioData, setPortfolioData] = useState(null);
   const componentRef = useRef();
 
@@ -47,6 +49,193 @@ const Design2 = () => {
     onAfterPrint: () => alert("Portfolio saved as PDF"),
   });
 
+  const generateStaticHtml = (portfolioData) => {
+    return `
+      <!DOCTYPE html>
+      <html lang="en">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Portfolio</title>
+        <style>
+          body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #FFF;
+            background: linear-gradient(to right, #ff7e5f, #cb2d3e);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100vw;
+            min-height: 100vh;
+            padding-top: 60px;
+          }
+          .profile {
+            text-align: center;
+            padding: 20px;
+            background-color: #222;
+            width: 80%;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+            border-radius: 15px;
+            margin: 20px auto;
+          }
+          .content {
+            font-size: 16px;
+            line-height: 1.6;
+            padding: 20px;
+            text-align: left;
+            width: 80%;
+            background-color: #222;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+            border-radius: 15px;
+            margin: 20px auto;
+            background: linear-gradient(to bottom, #26a0da, #314755);
+          }
+          .initials {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            background-color: #444;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 48px;
+            color: #FFF;
+            margin: 0 auto 20px;
+            border: 5px solid white;
+          }
+          .name {
+            font-size: 24px;
+          }
+          .role {
+            font-size: 18px;
+            color: #AAA;
+          }
+          .contact {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            margin-top: 20px;
+          }
+          .icon {
+            display: flex;
+            align-items: center;
+            color: #FFF;
+            text-decoration: none;
+            font-size: 16px;
+            margin-right: 15px;
+          }
+        </style>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+      </head>
+      <body>
+        <div class="profile">
+          <div class="initials">
+            ${portfolioData.name
+              .split(" ")
+              .map((n) => n[0])
+              .join("")}
+          </div>
+          <h1 class="name">${portfolioData.name}</h1>
+          <p class="role">${portfolioData.role} | ${
+      portfolioData.university
+    }</p>
+          <div class="contact">
+            ${
+              portfolioData.email
+                ? `<a href="mailto:${portfolioData.email}" class="icon"><i class="fas fa-envelope"></i></a>`
+                : ""
+            }
+            ${
+              portfolioData.phoneNumber
+                ? `<a href="tel:${portfolioData.phoneNumber}" class="icon"><i class="fas fa-phone"></i></a>`
+                : ""
+            }
+            ${
+              portfolioData.linkedIn
+                ? `<a href="${portfolioData.linkedIn}" target="_blank" rel="noopener noreferrer" class="icon"><i class="fab fa-linkedin"></i></a>`
+                : ""
+            }
+          </div>
+        </div>
+        <div class="content">
+          <h2>About Me</h2>
+          <p>${portfolioData.summary || ""}</p>
+          <p>Education: ${portfolioData.education || ""}</p>
+          <p>Experience: ${portfolioData.experience || ""}</p>
+          <p>Tech Stack: ${portfolioData.techStack || ""}</p>
+          
+          <p>Projects: ${portfolioData.projects || ""}</p>
+        </div>
+      </body>
+      </html>
+    `;
+  };
+
+  const uploadToGitHub = async ({ token, username, repository }) => {
+    const fileName = "portfolio.html";
+
+    // Generate the HTML content based on portfolioData
+    const htmlContent = generateStaticHtml(portfolioData);
+
+    const getFileSha = async () => {
+      try {
+        const response = await axios.get(
+          `https://api.github.com/repos/${username}/${repository}/contents/${fileName}`,
+          {
+            headers: {
+              Authorization: `token ${token}`,
+            },
+          }
+        );
+        return response.data.sha;
+      } catch (error) {
+        if (error.response && error.response.status === 404) {
+          return null; // File not found, so it will be created
+        } else {
+          console.error("Error fetching file SHA:", error);
+          throw error;
+        }
+      }
+    };
+
+    try {
+      const sha = await getFileSha();
+      const data = {
+        message: "Upload portfolio",
+        content: btoa(unescape(encodeURIComponent(htmlContent))), // Properly encode HTML content
+        sha: sha || undefined, // Only include SHA if it exists
+      };
+
+      const response = await axios.put(
+        `https://api.github.com/repos/${username}/${repository}/contents/${fileName}`,
+        data,
+        {
+          headers: {
+            Authorization: `token ${token}`,
+          },
+        }
+      );
+
+      if (response.status === 200 || response.status === 201) {
+        alert("Portfolio uploaded to GitHub successfully!");
+      } else {
+        alert("Error uploading portfolio to GitHub.");
+      }
+    } catch (error) {
+      console.error("Error uploading portfolio to GitHub:", error);
+      if (error.response) {
+        console.error("GitHub API response data:", error.response.data);
+        alert(
+          `Error uploading portfolio to GitHub: ${error.response.data.message}`
+        );
+      } else {
+        alert("Error uploading portfolio to GitHub.");
+      }
+    }
+  };
+
   return (
     <>
       <style>
@@ -68,13 +257,22 @@ const Design2 = () => {
             </button>
           )}
           {portfolioData && (
-            <button
-              onClick={handlePrint}
-              style={{ ...buttonStyle, backgroundColor: "#555" }}
-              className="no-print"
-            >
-              Save as PDF
-            </button>
+            <div>
+              <button
+                onClick={handlePrint}
+                style={{ ...buttonStyle, backgroundColor: "#555" }}
+                className="no-print"
+              >
+                Save as PDF
+              </button>
+              <button
+                onClick={() => setGitHubModalOpen(true)}
+                style={{ ...buttonStyle, backgroundColor: "#007bff" }}
+                className="no-print"
+              >
+                Upload to GitHub
+              </button>
+            </div>
           )}
         </div>
         <div style={contentStyle}>
@@ -139,6 +337,11 @@ const Design2 = () => {
             handleSubmit={handleSubmit}
           />
         )}
+        <GitHubModal
+          showModal={gitHubModalOpen}
+          setShowModal={setGitHubModalOpen}
+          handleGitHubUpload={uploadToGitHub}
+        />
       </div>
     </>
   );
