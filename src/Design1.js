@@ -17,7 +17,7 @@ const Design1 = () => {
   const handleSubmit = async (formData) => {
     try {
       const response = await axios.post(
-         "http://52.201.236.246:8080/api/userinfo/template/1",
+         "http://52.90.153.141:8080/api/userinfo/template/1",
        // "http://localhost:8080/api/userinfo/template/1",
         formData
       );
@@ -32,7 +32,7 @@ const Design1 = () => {
     try {
       // const response = await axios.get("http://ec2-54-91-220-211.compute-1.amazonaws.com:8080/api/userinfo/template/1");
       const response = await axios.get(
-        "http://52.201.236.246:8080/api/userinfo/template/1"
+        "http://52.90.153.141:8080/api/userinfo/template/1"
       );
       setPortfolioData(response.data[0]); // Assuming you only need the first entry for now
     } catch (error) {
