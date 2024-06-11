@@ -9,6 +9,7 @@ const Design1 = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [gitHubModalOpen, setGitHubModalOpen] = useState(false);
   const [portfolioData, setPortfolioData] = useState(null);
+  const [currentPage, setCurrentPage] = useState("About Me"); // State for current page
   const componentRef = useRef();
 
   const openModal = () => setModalOpen(true);
@@ -17,7 +18,6 @@ const Design1 = () => {
   const handleSubmit = async (formData) => {
     try {
       const response = await axios.post(
-        // "http://ec2-54-91-220-211.compute-1.amazonaws.com:8080/api/userinfo/template/1",
         "http://localhost:8080/api/userinfo/template/1",
         formData
       );
@@ -30,7 +30,6 @@ const Design1 = () => {
 
   const fetchUserInfo = async () => {
     try {
-      // const response = await axios.get("http://ec2-54-91-220-211.compute-1.amazonaws.com:8080/api/userinfo/template/1");
       const response = await axios.get(
         "http://localhost:8080/api/userinfo/template/1"
       );
@@ -50,6 +49,13 @@ const Design1 = () => {
   });
 
   const generateStaticHtml = (portfolioData) => {
+    const experiencesHtml = portfolioData.experiences
+      .map((exp) => `<p>${exp}</p>`)
+      .join("");
+    const projectsHtml = portfolioData.projects
+      .map((proj) => `<p>${proj}</p>`)
+      .join("");
+
     return `
       <!DOCTYPE html>
       <html lang="en">
@@ -90,6 +96,7 @@ const Design1 = () => {
             border-radius: 15px;
             margin: 20px auto;
             background: linear-gradient(to bottom, #ff9a9e, #fecfef);
+            position: relative;
           }
           .initials {
             width: 150px;
@@ -126,8 +133,50 @@ const Design1 = () => {
             font-size: 16px;
             margin-right: 15px;
           }
+          .tabs {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 20px;
+            background-color: #cc6699;
+            border-radius: 10px;
+            padding: 10px;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+          }
+          .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 18px;
+            color: #FFF;
+            margin: 0 5px;
+            border-bottom: 2px solid transparent;
+            transition: color 0.3s, border-bottom 0.3s;
+          }
+          .tab.active {
+            color: #FFD700;
+            border-bottom: 2px solid #FFD700;
+          }
+          .content-section {
+            display: none;
+          }
+          .content-section.active {
+            display: block;
+          }
         </style>
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+        <script>
+          function setCurrentPage(page) {
+            document.querySelectorAll('.tab').forEach(tab => {
+              tab.classList.remove('active');
+            });
+            document.querySelector('.tab.' + page).classList.add('active');
+            document.querySelectorAll('.content-section').forEach(section => {
+              section.style.display = 'none';
+            });
+            document.querySelector('.content-section.' + page).style.display = 'block';
+          }
+        </script>
       </head>
       <body>
         <div class="profile">
@@ -160,13 +209,27 @@ const Design1 = () => {
           </div>
         </div>
         <div class="content">
-          <h2>About Me</h2>
-          <p>${portfolioData.summary || ""}</p>
-          <p>Education: ${portfolioData.education || ""}</p>
-          <p>Experience: ${portfolioData.experience || ""}</p>
-          <p>Tech Stack: ${portfolioData.techStack || ""}</p>
-          
-          <p>Projects:${portfolioData.projects || ""}</p>
+          <div class="tabs">
+            <div class="tab AboutMe active" onclick="setCurrentPage('AboutMe')">About Me</div>
+            <div class="tab Experience" onclick="setCurrentPage('Experience')">Experience</div>
+            <div class="tab Projects" onclick="setCurrentPage('Projects')">Projects</div>
+          </div>
+          <div class="content-section AboutMe active">
+            <h2>About Me</h2>
+            <p>${portfolioData.summary || ""}</p>
+            <p>Education: ${portfolioData.education || ""}</p>
+            <p>GPA: ${portfolioData.gpa || ""}</p>
+          </div>
+          <div class="content-section Experience">
+            <h2>Experience</h2>
+            ${experiencesHtml}
+            <h2>Tech Stack</h2>
+            <p>${portfolioData.techStack || ""}</p>
+          </div>
+          <div class="content-section Projects">
+            <h2>Projects</h2>
+            ${projectsHtml}
+          </div>
         </div>
       </body>
       </html>
@@ -311,19 +374,58 @@ const Design1 = () => {
           )}
         </div>
         <div style={contentStyle}>
-          <h2>About Me</h2>
-          <p>{portfolioData ? portfolioData.summary : "Summary"}</p>
-          <p>
-            Education: {portfolioData ? portfolioData.education : "Education"}
-          </p>
-          <p>
-            Experience:{" "}
-            {portfolioData ? portfolioData.experience : "Experience"}
-          </p>
-          <p>
-            Tech Stack: {portfolioData ? portfolioData.techStack : "Tech Stack"}
-          </p>
-          <p>Projects:{portfolioData ? portfolioData.projects : "Projects"}</p>
+          <div className="tabs" style={tabsStyle}>
+            <div
+              className={`tab ${currentPage === "About Me" ? "active" : ""}`}
+              onClick={() => setCurrentPage("About Me")}
+              style={tabStyle}
+            >
+              About Me
+            </div>
+            <div
+              className={`tab ${currentPage === "Experience" ? "active" : ""}`}
+              onClick={() => setCurrentPage("Experience")}
+              style={tabStyle}
+            >
+              Experience
+            </div>
+            <div
+              className={`tab ${currentPage === "Projects" ? "active" : ""}`}
+              onClick={() => setCurrentPage("Projects")}
+              style={tabStyle}
+            >
+              Projects
+            </div>
+          </div>
+          {currentPage === "About Me" && (
+            <div className="content-section AboutMe active">
+              <h2>About Me</h2>
+              <p>{portfolioData ? portfolioData.summary : "Summary"}</p>
+              <p>
+                Education:{" "}
+                {portfolioData ? portfolioData.education : "Education"}
+              </p>
+              <p>GPA: {portfolioData ? portfolioData.gpa : "GPA"}</p>
+            </div>
+          )}
+          {currentPage === "Experience" && (
+            <div className="content-section Experience">
+              <h2>Experience</h2>
+              {portfolioData?.experiences?.map((experience, index) => (
+                <p key={index}>{experience}</p>
+              ))}
+              <h2>Tech Stack</h2>
+              <p>{portfolioData ? portfolioData.techStack : "Tech Stack"}</p>
+            </div>
+          )}
+          {currentPage === "Projects" && (
+            <div className="content-section Projects">
+              <h2>Projects</h2>
+              {portfolioData?.projects?.map((project, index) => (
+                <p key={index}>{project}</p>
+              ))}
+            </div>
+          )}
         </div>
         {modalOpen && (
           <Modal
@@ -398,6 +500,7 @@ const contentStyle = {
   borderRadius: "15px",
   margin: "20px auto",
   background: "linear-gradient(to bottom, #ff9a9e, #fecfef)",
+  position: "relative",
 };
 
 const initialsStyle = {
@@ -438,6 +541,28 @@ const iconStyle = {
   textDecoration: "none",
   fontSize: "16px",
   marginRight: "15px",
+};
+
+const tabsStyle = {
+  display: "flex",
+  justifyContent: "flex-end",
+  marginBottom: "20px",
+  backgroundColor: "#cc6699",
+  borderRadius: "10px",
+  padding: "10px",
+  position: "absolute",
+  top: "10px",
+  right: "10px",
+};
+
+const tabStyle = {
+  padding: "10px 20px",
+  cursor: "pointer",
+  fontSize: "18px",
+  color: "#FFF",
+  margin: "0 5px",
+  borderBottom: "2px solid transparent",
+  transition: "color 0.3s, border-bottom 0.3s",
 };
 
 export default Design1;

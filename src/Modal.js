@@ -1,219 +1,449 @@
 import React, { useState } from "react";
 
+const ModalStep1 = ({ formData, handleChange, nextStep, closeModal }) => (
+  <div style={modalStyle}>
+    <div style={modalContentStyle}>
+      <h2 style={{ color: "#228B22" }}>Basic Info</h2>
+      <input
+        type="text"
+        name="name"
+        placeholder="Name"
+        value={formData.name}
+        onChange={handleChange}
+        style={inputStyle}
+      />
+      <input
+        type="text"
+        name="role"
+        placeholder="Role"
+        value={formData.role}
+        onChange={handleChange}
+        style={inputStyle}
+      />
+      <input
+        type="text"
+        name="university"
+        placeholder="University"
+        value={formData.university}
+        onChange={handleChange}
+        style={inputStyle}
+      />
+      <input
+        type="text"
+        name="education"
+        placeholder="Education"
+        value={formData.education}
+        onChange={handleChange}
+        style={inputStyle}
+      />
+      <input
+        type="text"
+        name="gpa"
+        placeholder="GPA"
+        value={formData.gpa}
+        onChange={handleChange}
+        style={inputStyle}
+      />
+      <div style={buttonContainerStyle}>
+        <button
+          onClick={closeModal}
+          style={{ ...buttonStyle, backgroundColor: "#f44336" }}
+        >
+          Cancel
+        </button>
+        <button
+          onClick={nextStep}
+          style={{ ...buttonStyle, backgroundColor: "#4CAF50" }}
+        >
+          Next
+        </button>
+      </div>
+    </div>
+  </div>
+);
+
+const ModalStep2 = ({
+  formData,
+  handleChange,
+  handleExperienceChange,
+  addExperienceField,
+  handleProjectChange,
+  addProjectField,
+  nextStep,
+  prevStep,
+  closeModal,
+}) => (
+  <div style={modalStyle}>
+    <div style={modalContentStyle}>
+      <h2 style={{ color: "#228B22" }}>Experience & Tech Stack</h2>
+      {formData.experiences.map((experience, index) => (
+        <div key={index} style={{ display: "flex", alignItems: "center" }}>
+          <input
+            type="text"
+            name={`experience-${index}`}
+            placeholder="Experience"
+            value={experience}
+            onChange={(e) => handleExperienceChange(index, e.target.value)}
+            style={inputStyle}
+          />
+          {index === formData.experiences.length - 1 && (
+            <button onClick={addExperienceField} style={addButtonStyle}>
+              +
+            </button>
+          )}
+        </div>
+      ))}
+      <input
+        type="text"
+        name="techStack"
+        placeholder="Tech Stack"
+        value={formData.techStack}
+        onChange={handleChange}
+        style={inputStyle}
+      />
+      <h2 style={{ color: "#228B22" }}>Projects</h2>
+      {formData.projects.map((project, index) => (
+        <div key={index} style={{ display: "flex", alignItems: "center" }}>
+          <input
+            type="text"
+            name={`project-${index}`}
+            placeholder="Project"
+            value={project}
+            onChange={(e) => handleProjectChange(index, e.target.value)}
+            style={inputStyle}
+          />
+          {index === formData.projects.length - 1 && (
+            <button onClick={addProjectField} style={addButtonStyle}>
+              +
+            </button>
+          )}
+        </div>
+      ))}
+      <div style={buttonContainerStyle}>
+        <button
+          onClick={prevStep}
+          style={{ ...buttonStyle, backgroundColor: "#2196F3" }}
+        >
+          Back
+        </button>
+        <button
+          onClick={closeModal}
+          style={{ ...buttonStyle, backgroundColor: "#f44336" }}
+        >
+          Cancel
+        </button>
+        <button
+          onClick={nextStep}
+          style={{ ...buttonStyle, backgroundColor: "#4CAF50" }}
+        >
+          Next
+        </button>
+      </div>
+    </div>
+  </div>
+);
+
+const ModalStep3 = ({
+  formData,
+  handleChange,
+  nextStep,
+  prevStep,
+  closeModal,
+}) => (
+  <div style={modalStyle}>
+    <div style={modalContentStyle}>
+      <h2 style={{ color: "#228B22" }}>Summary</h2>
+      <textarea
+        name="summary"
+        placeholder="Summary"
+        value={formData.summary}
+        onChange={handleChange}
+        style={textareaStyle}
+      />
+      <div style={buttonContainerStyle}>
+        <button
+          onClick={prevStep}
+          style={{ ...buttonStyle, backgroundColor: "#2196F3" }}
+        >
+          Back
+        </button>
+        <button
+          onClick={closeModal}
+          style={{ ...buttonStyle, backgroundColor: "#f44336" }}
+        >
+          Cancel
+        </button>
+        <button
+          onClick={nextStep}
+          style={{ ...buttonStyle, backgroundColor: "#4CAF50" }}
+        >
+          Next
+        </button>
+      </div>
+    </div>
+  </div>
+);
+
+const ModalStep4 = ({
+  formData,
+  handleChange,
+  prevStep,
+  closeModal,
+  handleSubmit,
+  handleLinkedInToggle,
+}) => (
+  <div style={modalStyle}>
+    <div style={modalContentStyle}>
+      <h2 style={{ color: "#228B22" }}>Contact Info</h2>
+      <input
+        type="email"
+        name="email"
+        placeholder="Email"
+        value={formData.email}
+        onChange={handleChange}
+        style={inputStyle}
+      />
+      <input
+        type="tel"
+        name="phoneNumber"
+        placeholder="Phone Number"
+        value={formData.phoneNumber}
+        onChange={handleChange}
+        style={inputStyle}
+      />
+      <div style={{ margin: "10px 0" }}>
+        <label>Do you have LinkedIn?</label>
+        <div>
+          <label>
+            <input
+              type="radio"
+              name="hasLinkedIn"
+              value="yes"
+              checked={formData.hasLinkedIn === "yes"}
+              onChange={handleLinkedInToggle}
+              style={{ marginRight: "10px" }}
+            />
+            Yes
+          </label>
+          <label style={{ marginLeft: "20px" }}>
+            <input
+              type="radio"
+              name="hasLinkedIn"
+              value="no"
+              checked={formData.hasLinkedIn === "no"}
+              onChange={handleLinkedInToggle}
+              style={{ marginRight: "10px" }}
+            />
+            No
+          </label>
+        </div>
+      </div>
+      {formData.hasLinkedIn === "yes" && (
+        <input
+          type="url"
+          name="linkedIn"
+          placeholder="LinkedIn"
+          value={formData.linkedIn}
+          onChange={handleChange}
+          style={inputStyle}
+        />
+      )}
+      <div style={buttonContainerStyle}>
+        <button
+          onClick={prevStep}
+          style={{ ...buttonStyle, backgroundColor: "#2196F3" }}
+        >
+          Back
+        </button>
+        <button
+          onClick={closeModal}
+          style={{ ...buttonStyle, backgroundColor: "#f44336" }}
+        >
+          Cancel
+        </button>
+        <button
+          onClick={handleSubmit}
+          style={{ ...buttonStyle, backgroundColor: "#4CAF50" }}
+        >
+          Submit
+        </button>
+      </div>
+    </div>
+  </div>
+);
+
 const Modal = ({ showModal, setShowModal, handleSubmit }) => {
+  const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     name: "",
     role: "",
     university: "",
     education: "",
-    experience: "",
+    gpa: "",
+    experiences: [""],
     techStack: "",
-    projects: "",
+    projects: [""],
     summary: "",
     email: "",
     phoneNumber: "",
     linkedIn: "",
+    hasLinkedIn: "no",
   });
-
-  const [errors, setErrors] = useState({});
-  const [hasLinkedIn, setHasLinkedIn] = useState(null); // Tracks LinkedIn profile presence
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleRadioChange = (e) => {
-    setHasLinkedIn(e.target.value === "yes");
+  const handleLinkedInToggle = (e) => {
+    setFormData({ ...formData, hasLinkedIn: e.target.value });
     if (e.target.value === "no") {
-      setFormData({ ...formData, linkedIn: "" }); // Clear LinkedIn field if "no" is selected
+      setFormData({ ...formData, linkedIn: "" });
     }
   };
 
-  const validateForm = () => {
-    let errors = {};
-    let formIsValid = true;
-
-    // Validation logic for various fields
-    if (!formData.email) {
-      formIsValid = false;
-      errors["email"] = "Cannot be empty";
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      formIsValid = false;
-      errors["email"] = "Email is not valid";
-    }
-
-    if (!formData.phoneNumber) {
-      formIsValid = false;
-      errors["phoneNumber"] = "Cannot be empty";
-    } else if (!/^\d{10}$/.test(formData.phoneNumber)) {
-      formIsValid = false;
-      errors["phoneNumber"] = "Phone number is not valid. Should be 10 digits";
-    }
-
-    if (
-      hasLinkedIn &&
-      !/^https?:\/\/(www\.)?linkedin\.com\/.+$/.test(formData.linkedIn)
-    ) {
-      formIsValid = false;
-      errors["linkedIn"] = "Invalid LinkedIn URL";
-    }
-
-    if (!formData.name.trim()) {
-      formIsValid = false;
-      errors["name"] = "Name is required";
-    }
-
-    setErrors(errors);
-    return formIsValid;
+  const handleExperienceChange = (index, value) => {
+    const newExperiences = formData.experiences.slice();
+    newExperiences[index] = value;
+    setFormData({ ...formData, experiences: newExperiences });
   };
 
+  const addExperienceField = () => {
+    setFormData({ ...formData, experiences: [...formData.experiences, ""] });
+  };
+
+  const handleProjectChange = (index, value) => {
+    const newProjects = formData.projects.slice();
+    newProjects[index] = value;
+    setFormData({ ...formData, projects: newProjects });
+  };
+
+  const addProjectField = () => {
+    setFormData({ ...formData, projects: [...formData.projects, ""] });
+  };
+
+  const nextStep = () => setStep(step + 1);
+  const prevStep = () => setStep(step - 1);
+  const closeModal = () => setShowModal(false);
   const handleFormSubmit = (e) => {
     e.preventDefault();
-    if (validateForm()) {
-      handleSubmit(formData);
-      setShowModal(false);
-    }
+    handleSubmit(formData);
+    setShowModal(false);
   };
 
   if (!showModal) return null;
 
-  return (
-    <div
-      style={{
-        position: "fixed",
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        backgroundColor: "rgba(0,0,0,0.5)",
-        display: "flex",
-        alignItems: "center",
-        justifyContent: "center",
-      }}
-    >
-      <div
-        style={{
-          backgroundColor: "#fff",
-          padding: 20,
-          borderRadius: 5,
-          width: "100%",
-        }}
-      >
-        <h2 style={{ color: "#228B22" }}>Create Your Portfolio</h2>
-        <form onSubmit={handleFormSubmit}>
-          {Object.keys(formData).map((key) => {
-            // Render the LinkedIn question right after the phone number field
-            if (key === "phoneNumber") {
-              return (
-                <>
-                  <div key={key}>
-                    <input
-                      type="tel"
-                      name={key}
-                      placeholder="Phone Number"
-                      value={formData[key]}
-                      onChange={handleChange}
-                      required
-                      style={{ width: "98%", padding: "10px", margin: "5px 0" }}
-                    />
-                    {errors[key] && (
-                      <div style={{ color: "red" }}>{errors[key]}</div>
-                    )}
-                  </div>
-                  <div>
-                    <label style={{ marginRight: "10px", color: "black" }}>
-                      Do you have a LinkedIn profile?
-                    </label>
-                    <label style={{ color: "black" }}>
-                      <input
-                        type="radio"
-                        name="hasLinkedIn"
-                        value="yes"
-                        checked={hasLinkedIn === true}
-                        onChange={handleRadioChange}
-                      />{" "}
-                      Yes
-                    </label>
-                    <label style={{ marginLeft: "10px", color: "black" }}>
-                      <input
-                        type="radio"
-                        name="hasLinkedIn"
-                        value="no"
-                        checked={hasLinkedIn === false}
-                        onChange={handleRadioChange}
-                      />{" "}
-                      No
-                    </label>
-                  </div>
-                </>
-              );
-            }
-            if (key !== "linkedIn" || hasLinkedIn) {
-              return (
-                <div key={key}>
-                  <input
-                    type={
-                      key === "email"
-                        ? "email"
-                        : key === "phoneNumber"
-                        ? "tel"
-                        : key === "linkedIn"
-                        ? "url"
-                        : "text"
-                    }
-                    name={key}
-                    placeholder={
-                      key[0].toUpperCase() +
-                      key
-                        .slice(1)
-                        .replace(/([A-Z])/g, " $1")
-                        .trim()
-                    }
-                    value={formData[key]}
-                    onChange={handleChange}
-                    required={key !== "linkedIn"}
-                    style={{ width: "98%", padding: "10px", margin: "5px 0" }}
-                  />
-                  {errors[key] && (
-                    <div style={{ color: "red" }}>{errors[key]}</div>
-                  )}
-                </div>
-              );
-            }
-            return null;
-          })}
-          <button
-            type="submit"
-            style={{
-              padding: "10px 20px",
-              backgroundColor: "#4CAF50",
-              color: "white",
-              border: "none",
-              borderRadius: "5px",
-              cursor: "pointer",
-            }}
-          >
-            Submit
-          </button>
-          <button
-            type="button"
-            onClick={() => setShowModal(false)}
-            style={{
-              padding: "10px 20px",
-              marginLeft: "10px",
-              backgroundColor: "#f44336",
-              color: "white",
-              border: "none",
-              borderRadius: "5px",
-              cursor: "pointer",
-            }}
-          >
-            Close
-          </button>
-        </form>
-      </div>
-    </div>
-  );
+  switch (step) {
+    case 1:
+      return (
+        <ModalStep1
+          formData={formData}
+          handleChange={handleChange}
+          nextStep={nextStep}
+          closeModal={closeModal}
+        />
+      );
+    case 2:
+      return (
+        <ModalStep2
+          formData={formData}
+          handleChange={handleChange}
+          handleExperienceChange={handleExperienceChange}
+          addExperienceField={addExperienceField}
+          handleProjectChange={handleProjectChange}
+          addProjectField={addProjectField}
+          nextStep={nextStep}
+          prevStep={prevStep}
+          closeModal={closeModal}
+        />
+      );
+    case 3:
+      return (
+        <ModalStep3
+          formData={formData}
+          handleChange={handleChange}
+          nextStep={nextStep}
+          prevStep={prevStep}
+          closeModal={closeModal}
+        />
+      );
+    case 4:
+      return (
+        <ModalStep4
+          formData={formData}
+          handleChange={handleChange}
+          prevStep={prevStep}
+          closeModal={closeModal}
+          handleSubmit={handleFormSubmit}
+          handleLinkedInToggle={handleLinkedInToggle}
+        />
+      );
+    default:
+      return null;
+  }
+};
+
+const modalStyle = {
+  position: "fixed",
+  top: 0,
+  left: 0,
+  width: "100%",
+  height: "100%",
+  backgroundColor: "rgba(0, 0, 0, 0.5)",
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+};
+
+const modalContentStyle = {
+  backgroundColor: "#fff",
+  padding: "20px",
+  borderRadius: "5px",
+  width: "400px",
+  display: "flex",
+  flexDirection: "column",
+  color: "black",
+};
+
+const inputStyle = {
+  width: "90%",
+  padding: "10px",
+  margin: "10px 0",
+  borderRadius: "5px",
+  border: "1px solid #ccc",
+};
+
+const textareaStyle = {
+  width: "90%",
+  height: "100px",
+  padding: "10px",
+  margin: "10px 0",
+  borderRadius: "5px",
+  border: "1px solid #ccc",
+};
+
+const addButtonStyle = {
+  padding: "10px 15px",
+  backgroundColor: "#4CAF50",
+  color: "white",
+  border: "none",
+  borderRadius: "5px",
+  cursor: "pointer",
+  marginLeft: "10px",
+};
+
+const buttonStyle = {
+  padding: "10px 20px",
+  backgroundColor: "#4CAF50",
+  color: "white",
+  border: "none",
+  borderRadius: "5px",
+  cursor: "pointer",
+  margin: "10px 5px",
+};
+
+const buttonContainerStyle = {
+  display: "flex",
+  justifyContent: "space-between",
 };
 
 export default Modal;
